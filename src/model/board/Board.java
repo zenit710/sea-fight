@@ -19,7 +19,7 @@ public class Board {
             throw new OutOfBoardException("Ship out of board");
         }
 
-        if (!requestedFieldsFree()) {
+        if (!requestedFieldsFree(ship, x, y)) {
             throw new BoardFieldsPermittedException("Fields are not available");
         }
 
