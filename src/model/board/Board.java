@@ -7,7 +7,7 @@ public class Board {
     private Ship[][] ships;
     private boolean[][] availableFields;
 
-    Board(int size)
+    public Board(int size)
     {
         this.size = size;
         clearBoard();
@@ -25,6 +25,18 @@ public class Board {
 
         placeShip(ship, x, y);
         permitFields(ship, x, y);
+    }
+
+    public Ship shoot(int x, int y)
+    {
+        if (ships[x][y] != null) {
+            Ship ship = ships[x][y];
+            ship.hit();
+
+            return ship;
+        }
+
+        return null;
     }
 
     private void clearBoard()
