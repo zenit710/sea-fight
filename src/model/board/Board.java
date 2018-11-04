@@ -27,6 +27,10 @@ public class Board {
         permitFields(ship, x, y);
     }
 
+    public int getSize() {
+        return size;
+    }
+
     public Ship shoot(int x, int y)
     {
         if (ships[x][y] != null) {
