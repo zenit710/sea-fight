@@ -4,8 +4,6 @@ public class Ship {
     private int size;
     private int hits = 0;
     private boolean vertical = true;
-    private int startPositionX = -1;
-    private int startPositionY = -1;
 
     public Ship(int size)
     {
@@ -21,14 +19,6 @@ public class Ship {
         return size;
     }
 
-    public int getStartPositionX() {
-        return startPositionX;
-    }
-
-    public int getStartPositionY() {
-        return startPositionY;
-    }
-
     public void hit()
     {
         hits++;
@@ -42,13 +32,5 @@ public class Ship {
     public boolean isSunk()
     {
         return hits == size;
-    }
-
-    public void setStartPositionX(int startPositionX) {
-        this.startPositionX = startPositionX;
-    }
-
-    public void setStartPositionY(int startPositionY) {
-        this.startPositionY = startPositionY;
     }
 }

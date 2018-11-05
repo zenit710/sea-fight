@@ -3,7 +3,7 @@ package model.board;
 import model.Ship;
 
 public class Board {
-    private int size = 0;
+    private int size;
     private Ship[][] ships;
     private boolean[][] availableFields;
 
@@ -13,28 +13,36 @@ public class Board {
         clearBoard();
     }
 
-    public void addShip(Ship ship, int x, int y) throws OutOfBoardException, BoardFieldsPermittedException
+    public void addShip(Ship ship, int row, int column) throws OutOfBoardException, BoardFieldsPermittedException
     {
-        if (requestedFieldsOutOfBoard(ship, x, y)) {
+        if (requestedFieldsOutOfBoard(ship, row, column)) {
             throw new OutOfBoardException("Ship out of board");
         }
 
-        if (!requestedFieldsFree(ship, x, y)) {
+        if (!requestedFieldsFree(ship, row, column)) {
             throw new BoardFieldsPermittedException("Fields are not available");
         }
 
-        placeShip(ship, x, y);
-        permitFields(ship, x, y);
+        placeShip(ship, row, column);
+        permitFields(ship, row, column);
+    }
+
+    public boolean[][] getAvailableFields() {
+        return availableFields;
+    }
+
+    public Ship[][] getShips() {
+        return ships;
     }
 
     public int getSize() {
         return size;
     }
 
-    public Ship shoot(int x, int y)
+    public Ship shoot(int row, int column)
     {
-        if (ships[x][y] != null) {
-            Ship ship = ships[x][y];
+        if (ships[row][column] != null) {
+            Ship ship = ships[row][column];
             ship.hit();
 
             return ship;
@@ -56,54 +64,54 @@ public class Board {
         }
     }
 
-    private void permitFields(Ship ship, int x, int y)
+    private void permitFields(Ship ship, int row, int column)
     {
-        int startY = y == 0 ? 0 : y - 1;
-        int startX = x == 0 ? 0 : x - 1;
-        int endX;
-        int endY;
+        int startColumn = column == 0 ? 0 : column - 1;
+        int startRow = row == 0 ? 0 : row - 1;
+        int endRow;
+        int endColumn;
         int shipSize = ship.getSize();
 
         if (ship.isVertical()) {
-            endX = x == size - 1 ? x : x + 1;
-            endY = startY + shipSize;
-            endY = endY == size - 1 ? endY : endY + 1;
+            endColumn = column == size - 1 ? column : column + 1;
+            endRow = startRow + shipSize;
+            endRow = endRow == size - 1 ? endRow : endRow + 1;
         } else {
-            endY = y == size - 1 ? y : y + 1;
-            endX = startX + shipSize;
-            endX = endX == size - 1 ? endX : endX + 1;
+            endRow = row == size - 1 ? row : row + 1;
+            endColumn = startColumn + shipSize;
+            endColumn = endColumn == size - 1 ? endColumn : endColumn + 1;
         }
 
-        for (int i = startX; i <= endX; i++) {
-            for (int j = startY; j <= endY; j++) {
+        for (int i = startRow; i <= endRow; i++) {
+            for (int j = startColumn; j <= endColumn; j++) {
                 availableFields[i][j] = false;
             }
         }
     }
 
-    private boolean requestedFieldsOutOfBoard(Ship ship, int x, int y)
+    private boolean requestedFieldsOutOfBoard(Ship ship, int row, int column)
     {
-        return x >= size
-                || y >= size
-                || (ship.isVertical() && y + ship.getSize() >= size)
-                || (!ship.isVertical() && x + ship.getSize() >= size);
+        return row >= size
+                || column >= size
+                || (ship.isVertical() && row + ship.getSize() > size)
+                || (!ship.isVertical() && column + ship.getSize() > size);
     }
 
-    private boolean requestedFieldsFree(Ship ship, int x, int y)
+    private boolean requestedFieldsFree(Ship ship, int row, int column)
     {
         if (ship.isVertical()) {
-            int shipEndY = y + ship.getSize();
+            int shipEndRow = row + ship.getSize();
 
-            for (int i = y; i < shipEndY; i++) {
-                if (!availableFields[x][i]) {
+            for (int i = row; i < shipEndRow; i++) {
+                if (!availableFields[i][column]) {
                     return false;
                 }
             }
         } else {
-            int shipEndX = x + ship.getSize();
+            int shipEndColumn = column + ship.getSize();
 
-            for (int i = x; i < shipEndX; i++) {
-                if (!availableFields[i][y]) {
+            for (int i = column; i < shipEndColumn; i++) {
+                if (!availableFields[row][i]) {
                     return false;
                 }
             }
@@ -112,22 +120,19 @@ public class Board {
         return true;
     }
 
-    private void placeShip(Ship ship, int x, int y)
+    private void placeShip(Ship ship, int row, int column)
     {
-        ship.setStartPositionX(x);
-        ship.setStartPositionY(y);
-
         if (ship.isVertical()) {
-            int shipEndY = y + ship.getSize();
+            int shipEndRow = row + ship.getSize();
 
-            for (int i = y; i < shipEndY; i++) {
-                ships[x][i] = ship;
+            for (int i = row; i < shipEndRow; i++) {
+                ships[i][column] = ship;
             }
         } else {
-            int shipEndX = x + ship.getSize();
+            int shipEndColumn = column + ship.getSize();
 
-            for (int i = x; i < shipEndX; i++) {
-                ships[i][y] = ship;
+            for (int i = column; i < shipEndColumn; i++) {
+                ships[row][i] = ship;
             }
         }
     }
