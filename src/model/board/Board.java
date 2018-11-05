@@ -59,23 +59,23 @@ public class Board {
     private void permitFields(Ship ship, int x, int y)
     {
         int startY = y == 0 ? 0 : y - 1;
-        int startX = x == 0 ? 0 : y - 1;
+        int startX = x == 0 ? 0 : x - 1;
         int endX;
         int endY;
         int shipSize = ship.getSize();
 
         if (ship.isVertical()) {
             endX = x == size - 1 ? x : x + 1;
-            endY = y + shipSize;
+            endY = startY + shipSize;
             endY = endY == size - 1 ? endY : endY + 1;
         } else {
             endY = y == size - 1 ? y : y + 1;
-            endX = x + shipSize;
+            endX = startX + shipSize;
             endX = endX == size - 1 ? endX : endX + 1;
         }
 
-        for (int i = startX; i < endX; i++) {
-            for (int j = startY; j < endY; j++) {
+        for (int i = startX; i <= endX; i++) {
+            for (int j = startY; j <= endY; j++) {
                 availableFields[i][j] = false;
             }
         }
@@ -127,7 +127,7 @@ public class Board {
             int shipEndX = x + ship.getSize();
 
             for (int i = x; i < shipEndX; i++) {
-                ships[x][i] = ship;
+                ships[i][y] = ship;
             }
         }
     }

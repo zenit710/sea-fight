@@ -7,7 +7,7 @@ public class Ship {
     private int startPositionX = -1;
     private int startPositionY = -1;
 
-    Ship(int size)
+    public Ship(int size)
     {
         this.size = size;
     }

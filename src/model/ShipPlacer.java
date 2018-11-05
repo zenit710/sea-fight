@@ -23,23 +23,25 @@ public class ShipPlacer {
         shipSize3Count = size3Count;
         shipSize4Count = size4Count;
         ships = new Ship[size1Count + size2Count + size3Count + size4Count];
+
+        createShips();
     }
 
-    public void createShips()
+    private void createShips()
     {
-        int i = 0;
+        int index = 0;
 
-        for (; i < shipSize4Count; i++) {
-            ships[i] = new Ship(4);
+        for (int i = 0; i < shipSize4Count; i++, index++) {
+            ships[index] = new Ship(4);
         }
-        for (; i < shipSize3Count; i++) {
-            ships[i] = new Ship(3);
+        for (int i = 0; i < shipSize3Count; i++, index++) {
+            ships[index] = new Ship(3);
         }
-        for (; i < shipSize2Count; i++) {
-            ships[i] = new Ship(2);
+        for (int i = 0; i < shipSize2Count; i++, index++) {
+            ships[index] = new Ship(2);
         }
-        for (; i < shipSize1Count; i++) {
-            ships[i] = new Ship(1);
+        for (int i = 0; i < shipSize1Count; i++, index++) {
+            ships[index] = new Ship(1);
         }
     }
 
