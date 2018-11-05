@@ -23,6 +23,9 @@ public class Board {
             throw new BoardFieldsPermittedException("Fields are not available");
         }
 
+        ship.setStartColumn(column);
+        ship.setStartRow(row);
+
         placeShip(ship, row, column);
         permitFields(ship, row, column);
     }

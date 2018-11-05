@@ -4,6 +4,8 @@ public class Ship {
     private int size;
     private int hits = 0;
     private boolean vertical = true;
+    private int startRow = -1;
+    private int startColumn = -1;
 
     public Ship(int size)
     {
@@ -19,6 +21,14 @@ public class Ship {
         return size;
     }
 
+    public int getStartRow() {
+        return startRow;
+    }
+
+    public int getStartColumn() {
+        return startColumn;
+    }
+
     public void hit()
     {
         hits++;
@@ -32,5 +42,13 @@ public class Ship {
     public boolean isSunk()
     {
         return hits == size;
+    }
+
+    public void setStartRow(int startRow) {
+        this.startRow = startRow;
+    }
+
+    public void setStartColumn(int startColumn) {
+        this.startColumn = startColumn;
     }
 }

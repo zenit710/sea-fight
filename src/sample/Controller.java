@@ -15,12 +15,11 @@ import model.ShipListFactory;
 import model.board.Board;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Controller {
     private final int boardSize = 10;
-
-    @FXML
-    private GridPane root;
+    private Random random = new Random();
 
     @FXML
     private GridPane oponentPane;
@@ -43,7 +42,6 @@ public class Controller {
         shipPlacer.placeShips(shipListFactory.create());
 
         letPlayerChooseShipPositions();
-        initShotButtons();
     }
 
     private void letPlayerChooseShipPositions()
@@ -113,6 +111,7 @@ public class Controller {
                                     initShipPlaceButtons(shipList, shipNumber + 1);
                                 } else {
                                     displayPlayerShips();
+                                    play();
                                 }
                             } catch(Exception e) {
                                 e.printStackTrace();
@@ -220,18 +219,61 @@ public class Controller {
                         Ship ship = oponentsBoard.shoot(GridPane.getRowIndex(btn), GridPane.getColumnIndex(btn));
 
                         if (ship != null) {
-                            btn.setStyle("-fx-background-color: #ff0000; ");
+                            btn.setStyle("-fx-background-color: #ffff00; ");
 
                             if (ship.isSunk()) {
-                                System.out.println("trafiony - zatopiony");
+                                markShipAsSunk(ship, oponentPane);
                             }
                         }
 
                         btn.setDisable(true);
+
+                        oponentShoot();
                     }
                 });
 
                 oponentPane.add(btn, j, i);
+            }
+        }
+    }
+
+    private void play()
+    {
+        initShotButtons();
+    }
+
+    private void oponentShoot()
+    {
+        int row = random.nextInt(boardSize - 1);
+        int column = random.nextInt(boardSize - 1);
+        Button button = (Button) getNodeByRowColumnIndex(row, column, playerPane);
+
+        Ship ship = playersBoard.shoot(row, column);
+
+        if (ship == null) {
+            button.setStyle("-fx-background-color: #000000;");
+        } else if (ship.isSunk()) {
+            markShipAsSunk(ship, playerPane);
+        } else {
+            button.setStyle("-fx-background-color: #ffff00;");
+        }
+    }
+
+    private void markShipAsSunk(Ship ship, GridPane pane)
+    {
+        if (ship.isVertical()) {
+            int endRow = ship.getStartRow() + ship.getSize();
+
+            for (int i = ship.getStartRow(); i < endRow; i++) {
+                Button button = (Button) getNodeByRowColumnIndex(i, ship.getStartColumn(), pane);
+                button.setStyle("-fx-background-color: #ff0000;");
+            }
+        } else {
+            int endColumn = ship.getStartColumn() + ship.getSize();
+
+            for (int i = ship.getStartColumn(); i < endColumn; i++) {
+                Button button = (Button) getNodeByRowColumnIndex(ship.getStartRow(), i, pane);
+                button.setStyle("-fx-background-color: #ff0000;");
             }
         }
     }
