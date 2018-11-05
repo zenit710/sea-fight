@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import model.Ship;
@@ -18,6 +19,9 @@ import java.util.ArrayList;
 
 public class Controller {
     private final int boardSize = 10;
+
+    @FXML
+    private GridPane root;
 
     @FXML
     private GridPane oponentPane;
@@ -76,25 +80,7 @@ public class Controller {
                         int row = GridPane.getRowIndex(btn);
                         int column = GridPane.getColumnIndex(btn);
 
-                        if (currentShip.isVertical()) {
-                            int endRow = row + currentShip.getSize();
-
-                            if (endRow <= boardSize) {
-                                for (int i = row; i < endRow; i++) {
-                                    Button button = (Button) getNodeByRowColumnIndex(i, column, playerPane);
-                                    button.setStyle("-fx-background-color: #ff0000;");
-                                }
-                            }
-                        } else {
-                            int endColumn = column + currentShip.getSize();
-
-                            if (endColumn <= boardSize) {
-                                for (int i = column; i < endColumn; i++) {
-                                    Button button = (Button) getNodeByRowColumnIndex(row, i, playerPane);
-                                    button.setStyle("-fx-background-color: #ff0000;");
-                                }
-                            }
-                        }
+                        focusShipLocation(currentShip, row, column);
                     }
                 });
 
@@ -104,31 +90,26 @@ public class Controller {
                         int row = GridPane.getRowIndex(btn);
                         int column = GridPane.getColumnIndex(btn);
 
-                        if (currentShip.isVertical()) {
-                            int endRow = row + currentShip.getSize();
-
-                            if (endRow <= boardSize) {
-                                for (int i = row; i < endRow; i++) {
-                                    Button button = (Button) getNodeByRowColumnIndex(i, column, playerPane);
-                                    button.setStyle(null);
-                                }
-                            }
-                        } else {
-                            int endColumn = column + currentShip.getSize();
-
-                            if (endColumn <= boardSize) {
-                                for (int i = column; i < endColumn; i++) {
-                                    Button button = (Button) getNodeByRowColumnIndex(row, i, playerPane);
-                                    button.setStyle(null);
-                                }
-                            }
-                        }
+                        focusOffShipLocation(currentShip, row, column);
                     }
                 });
 
                 btn.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
+                        if (event.getButton() == MouseButton.SECONDARY) {
+                            int row = GridPane.getRowIndex(btn);
+                            int column = GridPane.getColumnIndex(btn);
+
+                            focusOffShipLocation(currentShip, row, column);
+
+                            currentShip.changeOrientation();
+
+                            focusShipLocation(currentShip, row, column);
+
+                            return;
+                        }
+
                         int row = GridPane.getRowIndex(btn);
                         int column = GridPane.getColumnIndex(btn);
 
@@ -147,6 +128,52 @@ public class Controller {
                 });
 
                 playerPane.add(btn, j, i);
+            }
+        }
+    }
+
+    private void focusShipLocation(Ship ship, int row, int column)
+    {
+        if (ship.isVertical()) {
+            int endRow = row + ship.getSize();
+
+            if (endRow <= boardSize) {
+                for (int i = row; i < endRow; i++) {
+                    Button button = (Button) getNodeByRowColumnIndex(i, column, playerPane);
+                    button.setStyle("-fx-background-color: #ff0000;");
+                }
+            }
+        } else {
+            int endColumn = column + ship.getSize();
+
+            if (endColumn <= boardSize) {
+                for (int i = column; i < endColumn; i++) {
+                    Button button = (Button) getNodeByRowColumnIndex(row, i, playerPane);
+                    button.setStyle("-fx-background-color: #ff0000;");
+                }
+            }
+        }
+    }
+
+    private void focusOffShipLocation(Ship ship, int row, int column)
+    {
+        if (ship.isVertical()) {
+            int endRow = row + ship.getSize();
+
+            if (endRow <= boardSize) {
+                for (int i = row; i < endRow; i++) {
+                    Button button = (Button) getNodeByRowColumnIndex(i, column, playerPane);
+                    button.setStyle(null);
+                }
+            }
+        } else {
+            int endColumn = column + ship.getSize();
+
+            if (endColumn <= boardSize) {
+                for (int i = column; i < endColumn; i++) {
+                    Button button = (Button) getNodeByRowColumnIndex(row, i, playerPane);
+                    button.setStyle(null);
+                }
             }
         }
     }
