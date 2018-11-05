@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import model.Ship;
 import model.ShipPlacer;
+import model.ShipListFactory;
 import model.board.Board;
 
 public class Controller {
@@ -18,15 +19,18 @@ public class Controller {
     @FXML
     private GridPane playerPane;
 
-    Board oponentsBoard;
-    Board playersBoard;
+    private ShipListFactory shipListFactory;
+    private Board oponentsBoard;
+    private Board playersBoard;
 
     @FXML
     public void initialize() {
         oponentsBoard = new Board(boardSize);
 
-        ShipPlacer shipPlacer = new ShipPlacer(oponentsBoard, 4, 3, 2, 1);
-        shipPlacer.placeShips();
+        shipListFactory = new ShipListFactory(4, 3, 2, 1);
+
+        ShipPlacer shipPlacer = new ShipPlacer(oponentsBoard);
+        shipPlacer.placeShips(shipListFactory.create());
 
         initShotButtons();
     }
@@ -52,6 +56,7 @@ public class Controller {
                         btn.setDisable(true);
                     }
                 });
+
                 oponentPane.add(btn, j, i);
             }
         }
