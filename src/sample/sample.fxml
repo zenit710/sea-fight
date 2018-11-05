@@ -19,7 +19,7 @@
       <Label text="Status" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
       <Label text="Player's Board" GridPane.halignment="CENTER" />
       <Label text="Oponent's Board" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
-      <GridPane fx:id="playerPane" gridLinesVisible="true" GridPane.rowIndex="1">
+      <GridPane fx:id="playerPane" GridPane.rowIndex="1">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -45,7 +45,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
       </GridPane>
-      <GridPane fx:id="oponentPane" gridLinesVisible="true" layoutX="10.0" layoutY="47.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+      <GridPane fx:id="oponentPane" layoutX="10.0" layoutY="47.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

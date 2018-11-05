@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import model.Ship;
 import model.ShipPlacer;
 import model.ShipListFactory;
@@ -224,9 +225,15 @@ public class Controller {
                             if (ship.isSunk()) {
                                 markShipAsSunk(ship, oponentPane);
                             }
+                        } else {
+                            btn.setStyle("-fx-background-color: #000000;");
                         }
 
                         btn.setDisable(true);
+
+                        if (oponentsBoard.allShipsSunk()) {
+                            System.out.println("Wygrałeś!");
+                        }
 
                         oponentShoot();
                     }
@@ -244,8 +251,14 @@ public class Controller {
 
     private void oponentShoot()
     {
-        int row = random.nextInt(boardSize - 1);
-        int column = random.nextInt(boardSize - 1);
+        int row;
+        int column;
+
+        do {
+            row = random.nextInt(boardSize - 1);
+            column = random.nextInt(boardSize - 1);
+        } while (playersBoard.isFieldShooted(row, column));
+
         Button button = (Button) getNodeByRowColumnIndex(row, column, playerPane);
 
         Ship ship = playersBoard.shoot(row, column);
@@ -256,6 +269,10 @@ public class Controller {
             markShipAsSunk(ship, playerPane);
         } else {
             button.setStyle("-fx-background-color: #ffff00;");
+        }
+
+        if (playersBoard.allShipsSunk()) {
+            System.out.println("Przegrałeś!");
         }
     }
 

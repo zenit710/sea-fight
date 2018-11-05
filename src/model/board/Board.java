@@ -6,6 +6,7 @@ public class Board {
     private int size;
     private Ship[][] ships;
     private boolean[][] availableFields;
+    private boolean[][] shots;
 
     public Board(int size)
     {
@@ -30,6 +31,25 @@ public class Board {
         permitFields(ship, row, column);
     }
 
+    public boolean allShipsSunk() {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                Ship ship = ships[i][j];
+
+                if (ship != null && !ship.isSunk()) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public boolean isFieldShooted(int row, int column)
+    {
+        return shots[row][column];
+    }
+
     public boolean[][] getAvailableFields() {
         return availableFields;
     }
@@ -44,6 +64,8 @@ public class Board {
 
     public Ship shoot(int row, int column)
     {
+        shots[row][column] = true;
+
         if (ships[row][column] != null) {
             Ship ship = ships[row][column];
             ship.hit();
@@ -58,11 +80,13 @@ public class Board {
     {
         ships = new Ship[size][size];
         availableFields = new boolean[size][size];
+        shots = new boolean[size][size];
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 ships[i][j] = null;
                 availableFields[i][j] = true;
+                shots[i][j] = false;
             }
         }
     }
