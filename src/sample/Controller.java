@@ -6,7 +6,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -67,7 +66,7 @@ public class Controller {
                 Button btn = new Button();
 
                 if (ships[i][j] != null) {
-                    btn.setStyle("-fx-background-color: #ff0000;");
+                    btn.setStyle("-fx-background-color: #0000ff;");
                 }
 
                 if (!availableFields[i][j]) {
@@ -97,32 +96,27 @@ public class Controller {
                 btn.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        if (event.getButton() == MouseButton.SECONDARY) {
-                            int row = GridPane.getRowIndex(btn);
-                            int column = GridPane.getColumnIndex(btn);
+                        int row = GridPane.getRowIndex(btn);
+                        int column = GridPane.getColumnIndex(btn);
 
+                        if (event.getButton() == MouseButton.SECONDARY) {
                             focusOffShipLocation(currentShip, row, column);
 
                             currentShip.changeOrientation();
 
                             focusShipLocation(currentShip, row, column);
+                        } else {
+                            try {
+                                playersBoard.addShip(currentShip, row, column);
 
-                            return;
-                        }
-
-                        int row = GridPane.getRowIndex(btn);
-                        int column = GridPane.getColumnIndex(btn);
-
-                        try {
-                            playersBoard.addShip(currentShip, row, column);
-
-                            if (shipNumber < shipList.size() - 1) {
-                                initShipPlaceButtons(shipList, shipNumber + 1);
-                            } else {
-                                displayPlayerShips();
+                                if (shipNumber < shipList.size() - 1) {
+                                    initShipPlaceButtons(shipList, shipNumber + 1);
+                                } else {
+                                    displayPlayerShips();
+                                }
+                            } catch(Exception e) {
+                                e.printStackTrace();
                             }
-                        } catch(Exception e) {
-                            e.printStackTrace();
                         }
                     }
                 });
@@ -140,7 +134,7 @@ public class Controller {
             if (endRow <= boardSize) {
                 for (int i = row; i < endRow; i++) {
                     Button button = (Button) getNodeByRowColumnIndex(i, column, playerPane);
-                    button.setStyle("-fx-background-color: #ff0000;");
+                    button.setStyle("-fx-background-color: #0000ff;");
                 }
             }
         } else {
@@ -149,7 +143,7 @@ public class Controller {
             if (endColumn <= boardSize) {
                 for (int i = column; i < endColumn; i++) {
                     Button button = (Button) getNodeByRowColumnIndex(row, i, playerPane);
-                    button.setStyle("-fx-background-color: #ff0000;");
+                    button.setStyle("-fx-background-color: #0000ff;");
                 }
             }
         }
@@ -202,13 +196,14 @@ public class Controller {
 
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
-                Label label = new Label();
+                Button btn = new Button();
+                btn.setDisable(true);
 
                 if (ships[i][j] != null) {
-                    label.setText("O");
+                    btn.setStyle("-fx-background-color: #0000ff;");
                 }
 
-                playerPane.add(label, j, i);
+                playerPane.add(btn, j, i);
             }
         }
     }
