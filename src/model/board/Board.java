@@ -1,6 +1,6 @@
 package model.board;
 
-import model.Ship;
+import model.ship.Ship;
 
 public class Board {
     private int size;

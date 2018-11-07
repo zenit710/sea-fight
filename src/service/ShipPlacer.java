@@ -1,5 +1,6 @@
-package model;
+package service;
 
+import model.ship.Ship;
 import model.board.Board;
 import model.board.BoardFieldsPermittedException;
 import model.board.OutOfBoardException;

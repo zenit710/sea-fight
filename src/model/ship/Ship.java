@@ -1,4 +1,4 @@
-package model;
+package model.ship;
 
 public class Ship {
     private int size;
