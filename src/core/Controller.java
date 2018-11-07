@@ -85,6 +85,8 @@ public class Controller implements ShipsPlacedEventListener, ShipSunkEventListen
             } else {
                 messageService.showMessage("You lost...");
             }
+
+            blockPlayerMoves();
         }
     }
 
@@ -109,6 +111,14 @@ public class Controller implements ShipsPlacedEventListener, ShipSunkEventListen
                 }
 
                 playerPane.add(btn, j, i);
+            }
+        }
+    }
+
+    private void blockPlayerMoves() {
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
+                ((Button)GridPaneNodeFinder.getNodeByRowColumnIndex(i, j, oponentPane)).setDisable(true);
             }
         }
     }
