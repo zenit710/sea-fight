@@ -1,4 +1,4 @@
-package sample;
+package core;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -10,13 +10,17 @@ import model.board.Board;
 import model.ship.Ship;
 import model.ship.ShipListFactory;
 import service.*;
+import utils.ButtonStyleInterface;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Controller implements ShipsPlacedEventListener {
+public class Controller implements
+        ShipsPlacedEventListener,
+        ShipSunkEventListener,
+        ShootEventListener
+{
     private final int boardSize = 10;
-    private Random random = new Random();
 
     @FXML
     private GridPane oponentPane;
@@ -31,6 +35,7 @@ public class Controller implements ShipsPlacedEventListener {
     private Board oponentsBoard;
     private Board playersBoard;
     private MessageService messageService;
+    private Random random = new Random();
 
     @FXML
     public void initialize() {
@@ -56,6 +61,17 @@ public class Controller implements ShipsPlacedEventListener {
         shipPlaceService.askUserToPlaceShips();
     }
 
+    private void play()
+    {
+        messageService.clear();
+        displayPlayerShips();
+
+        PlayerShootService playerShootService = new PlayerShootService(oponentPane, oponentsBoard);
+        playerShootService.setShipSunkEventListener(this);
+        playerShootService.setShootEventListener(this);
+        playerShootService.initShotButtons();
+    }
+
     private void displayPlayerShips()
     {
         Ship[][] ships = playersBoard.getShips();
@@ -68,52 +84,10 @@ public class Controller implements ShipsPlacedEventListener {
                 btn.setDisable(true);
 
                 if (ships[i][j] != null) {
-                    btn.setStyle("-fx-background-color: #0000ff;");
+                    btn.setStyle(ButtonStyleInterface.STYLE_OK);
                 }
 
                 playerPane.add(btn, j, i);
-            }
-        }
-    }
-
-    private void play()
-    {
-        messageService.clear();
-        initShotButtons();
-    }
-
-    private void initShotButtons()
-    {
-        for (int i = 0; i < boardSize; i++) {
-            for (int j = 0; j < boardSize; j++) {
-                Button btn = new Button();
-
-                btn.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        Ship ship = oponentsBoard.shoot(GridPane.getRowIndex(btn), GridPane.getColumnIndex(btn));
-
-                        if (ship != null) {
-                            btn.setStyle("-fx-background-color: #ffff00; ");
-
-                            if (ship.isSunk()) {
-                                markShipAsSunk(ship, oponentPane);
-                            }
-                        } else {
-                            btn.setStyle("-fx-background-color: #000000;");
-                        }
-
-                        btn.setDisable(true);
-
-                        if (oponentsBoard.allShipsSunk()) {
-                            messageService.showMessage("Wygrałeś!");
-                        }
-
-                        oponentShoot();
-                    }
-                });
-
-                oponentPane.add(btn, j, i);
             }
         }
     }
@@ -133,16 +107,35 @@ public class Controller implements ShipsPlacedEventListener {
         Ship ship = playersBoard.shoot(row, column);
 
         if (ship == null) {
-            button.setStyle("-fx-background-color: #000000;");
+            button.setStyle(ButtonStyleInterface.STYLE_MISSED);
         } else if (ship.isSunk()) {
             markShipAsSunk(ship, playerPane);
         } else {
-            button.setStyle("-fx-background-color: #ffff00;");
+            button.setStyle(ButtonStyleInterface.STYLE_DAMAGED);
         }
 
         if (playersBoard.allShipsSunk()) {
             messageService.showMessage("Przegrałeś!");
         }
+    }
+
+    @Override
+    public void onShipPlaced() {
+        play();
+    }
+
+    @Override
+    public void onShipSunk(Ship ship, GridPane gridPane) {
+        markShipAsSunk(ship, gridPane);
+
+        if (oponentsBoard.allShipsSunk()) {
+            messageService.showMessage("Wygrałeś!");
+        }
+    }
+
+    @Override
+    public void onShoot() {
+        oponentShoot();
     }
 
     private void markShipAsSunk(Ship ship, GridPane pane)
@@ -152,21 +145,15 @@ public class Controller implements ShipsPlacedEventListener {
 
             for (int i = ship.getStartRow(); i < endRow; i++) {
                 Button button = (Button) GridPaneNodeFinder.getNodeByRowColumnIndex(i, ship.getStartColumn(), pane);
-                button.setStyle("-fx-background-color: #ff0000;");
+                button.setStyle(ButtonStyleInterface.STYLE_DESTROYED);
             }
         } else {
             int endColumn = ship.getStartColumn() + ship.getSize();
 
             for (int i = ship.getStartColumn(); i < endColumn; i++) {
                 Button button = (Button) GridPaneNodeFinder.getNodeByRowColumnIndex(ship.getStartRow(), i, pane);
-                button.setStyle("-fx-background-color: #ff0000;");
+                button.setStyle(ButtonStyleInterface.STYLE_DESTROYED);
             }
         }
-    }
-
-    @Override
-    public void onShipPlaced() {
-        displayPlayerShips();
-        play();
     }
 }

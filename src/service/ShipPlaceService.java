@@ -11,6 +11,8 @@ import model.board.Board;
 import java.util.ArrayList;
 
 public class ShipPlaceService {
+    private final String STYLE_FOCUSED = "-fx-background-color: #0000ff;";
+
     private ShipsPlacedEventListener listener;
     private GridPane gridPane;
     private Board board;
@@ -47,7 +49,7 @@ public class ShipPlaceService {
                 Button btn = new Button();
 
                 if (ships[i][j] != null) {
-                    btn.setStyle("-fx-background-color: #0000ff;");
+                    btn.setStyle(STYLE_FOCUSED);
                 }
 
                 if (!availableFields[i][j]) {
@@ -116,7 +118,7 @@ public class ShipPlaceService {
             if (endRow <= board.getSize()) {
                 for (int i = row; i < endRow; i++) {
                     Button button = (Button) GridPaneNodeFinder.getNodeByRowColumnIndex(i, column, gridPane);
-                    button.setStyle("-fx-background-color: #0000ff;");
+                    button.setStyle(STYLE_FOCUSED);
                 }
             }
         } else {
@@ -125,7 +127,7 @@ public class ShipPlaceService {
             if (endColumn <= board.getSize()) {
                 for (int i = column; i < endColumn; i++) {
                     Button button = (Button) GridPaneNodeFinder.getNodeByRowColumnIndex(row, i, gridPane);
-                    button.setStyle("-fx-background-color: #0000ff;");
+                    button.setStyle(STYLE_FOCUSED);
                 }
             }
         }
