@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -27,6 +28,9 @@ public class Controller {
 
     @FXML
     private GridPane playerPane;
+
+    @FXML
+    private Label statusLabel;
 
     private ShipListFactory shipListFactory;
     private Board oponentsBoard;
@@ -57,6 +61,8 @@ public class Controller {
         Ship currentShip = shipList.get(shipNumber);
         boolean[][] availableFields = playersBoard.getAvailableFields();
         Ship[][] ships = playersBoard.getShips();
+
+        showStatusMessage(currentShip, shipNumber + 1);
 
         playerPane.getChildren().clear();
 
@@ -102,6 +108,7 @@ public class Controller {
                             focusOffShipLocation(currentShip, row, column);
 
                             currentShip.changeOrientation();
+                            showStatusMessage(currentShip, shipNumber + 1);
 
                             focusShipLocation(currentShip, row, column);
                         } else {
@@ -293,5 +300,15 @@ public class Controller {
                 button.setStyle("-fx-background-color: #ff0000;");
             }
         }
+    }
+
+    private void showStatusMessage(Ship ship, int shipNumber)
+    {
+        String statusMessage = "Place next ship (" + shipNumber + "):\n";
+        statusMessage += "Size: " + ship.getSize() + "\n";
+        statusMessage += "Orientation: ";
+        statusMessage += ship.isVertical() ? "Vertical" : "Horizontal";
+
+        statusLabel.setText(statusMessage);
     }
 }
