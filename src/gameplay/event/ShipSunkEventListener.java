@@ -1,4 +1,4 @@
-package service;
+package gameplay.event;
 
 import javafx.scene.layout.GridPane;
 import model.board.Board;

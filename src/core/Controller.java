@@ -1,5 +1,9 @@
 package core;
 
+import gameplay.*;
+import gameplay.event.ShipSunkEventListener;
+import gameplay.event.ShipsPlacedEventListener;
+import gameplay.event.ShootEventListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -28,7 +32,7 @@ public class Controller implements ShipsPlacedEventListener, ShipSunkEventListen
     private Board oponentsBoard;
     private Board playersBoard;
     private MessageService messageService;
-    private OponentShootService oponentShootService;
+    private OponentShootController oponentShootController;
 
     @FXML
     public void initialize() {
@@ -49,9 +53,9 @@ public class Controller implements ShipsPlacedEventListener, ShipSunkEventListen
     {
         ArrayList<Ship> shipList = shipListFactory.create();
 
-        ShipPlaceService shipPlaceService = new ShipPlaceService(playerPane, playersBoard, shipList, messageService);
-        shipPlaceService.setShipPlacedEventListener(this);
-        shipPlaceService.askUserToPlaceShips();
+        ShipPlaceController shipPlaceController = new ShipPlaceController(playerPane, playersBoard, shipList, messageService);
+        shipPlaceController.setShipPlacedEventListener(this);
+        shipPlaceController.askUserToPlaceShips();
     }
 
     private void play()
@@ -59,13 +63,13 @@ public class Controller implements ShipsPlacedEventListener, ShipSunkEventListen
         messageService.clear();
         displayPlayerShips();
 
-        PlayerShootService playerShootService = new PlayerShootService(oponentPane, oponentsBoard);
-        playerShootService.setShipSunkEventListener(this);
-        playerShootService.setShootEventListener(this);
-        playerShootService.initShotButtons();
+        PlayerShootController playerShootController = new PlayerShootController(oponentPane, oponentsBoard);
+        playerShootController.setShipSunkEventListener(this);
+        playerShootController.setShootEventListener(this);
+        playerShootController.initShotButtons();
 
-        oponentShootService = new OponentShootService(playerPane, playersBoard);
-        oponentShootService.setShipSunkEventListener(this);
+        oponentShootController = new OponentShootController(playerPane, playersBoard);
+        oponentShootController.setShipSunkEventListener(this);
     }
 
     @Override
@@ -86,7 +90,7 @@ public class Controller implements ShipsPlacedEventListener, ShipSunkEventListen
 
     @Override
     public void onShoot() {
-        oponentShootService.shoot();
+        oponentShootController.shoot();
     }
 
     private void displayPlayerShips()

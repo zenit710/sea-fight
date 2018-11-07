@@ -1,5 +1,6 @@
-package service;
+package gameplay;
 
+import gameplay.event.ShipsPlacedEventListener;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
@@ -7,10 +8,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import model.ship.Ship;
 import model.board.Board;
+import service.GridPaneNodeFinder;
+import service.MessageService;
 
 import java.util.ArrayList;
 
-public class ShipPlaceService {
+public class ShipPlaceController {
     private final String STYLE_FOCUSED = "-fx-background-color: #0000ff;";
 
     private ShipsPlacedEventListener listener;
@@ -19,7 +22,7 @@ public class ShipPlaceService {
     private ArrayList<Ship> shipList;
     private MessageService messageService;
 
-    public ShipPlaceService(GridPane gridPane, Board board, ArrayList<Ship> shipList, MessageService messageService) {
+    public ShipPlaceController(GridPane gridPane, Board board, ArrayList<Ship> shipList, MessageService messageService) {
         this.gridPane = gridPane;
         this.board = board;
         this.shipList = shipList;

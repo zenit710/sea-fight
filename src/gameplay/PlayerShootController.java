@@ -1,5 +1,6 @@
-package service;
+package gameplay;
 
+import gameplay.event.ShootEventListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -8,10 +9,10 @@ import model.board.Board;
 import model.ship.Ship;
 import utils.ButtonStyleInterface;
 
-public class PlayerShootService extends ShootService {
+public class PlayerShootController extends ShootController {
     private ShootEventListener shootEventListener;
 
-    public PlayerShootService(GridPane gridPane, Board board) {
+    public PlayerShootController(GridPane gridPane, Board board) {
         super(gridPane, board);
     }
 

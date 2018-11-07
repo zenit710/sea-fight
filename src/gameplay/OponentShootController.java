@@ -1,17 +1,18 @@
-package service;
+package gameplay;
 
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import model.board.Board;
 import model.ship.Ship;
+import service.GridPaneNodeFinder;
 import utils.ButtonStyleInterface;
 
 import java.util.Random;
 
-public class OponentShootService extends ShootService {
+public class OponentShootController extends ShootController {
     private Random random = new Random();
 
-    public OponentShootService(GridPane gridPane, Board board) {
+    public OponentShootController(GridPane gridPane, Board board) {
         super(gridPane, board);
     }
 

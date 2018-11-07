@@ -1,17 +1,19 @@
-package service;
+package gameplay;
 
+import gameplay.event.ShipSunkEventListener;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import model.board.Board;
 import model.ship.Ship;
+import service.GridPaneNodeFinder;
 import utils.ButtonStyleInterface;
 
-public abstract class ShootService {
+public abstract class ShootController {
     protected ShipSunkEventListener shipSunkEventListener;
     protected GridPane gridPane;
     protected Board board;
 
-    public ShootService(GridPane gridPane, Board board) {
+    public ShootController(GridPane gridPane, Board board) {
         this.gridPane = gridPane;
         this.board = board;
     }
