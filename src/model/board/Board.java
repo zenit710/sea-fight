@@ -60,6 +60,10 @@ public class Board {
         return name;
     }
 
+    public Ship getShipAt(int row, int column) {
+        return ships[row][column];
+    }
+
     public Ship[][] getShips() {
         return ships;
     }

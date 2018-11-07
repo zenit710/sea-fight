@@ -32,7 +32,7 @@ public class Controller implements ShipsPlacedEventListener, ShipSunkEventListen
     private Board oponentsBoard;
     private Board playersBoard;
     private MessageService messageService;
-    private OponentShootController oponentShootController;
+    private OpponentShootController opponentShootController;
 
     @FXML
     public void initialize() {
@@ -68,8 +68,8 @@ public class Controller implements ShipsPlacedEventListener, ShipSunkEventListen
         playerShootController.setShootEventListener(this);
         playerShootController.initShotButtons();
 
-        oponentShootController = new OponentShootController(playerPane, playersBoard);
-        oponentShootController.setShipSunkEventListener(this);
+        opponentShootController = new OpponentShootController(playerPane, playersBoard);
+        opponentShootController.setShipSunkEventListener(this);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class Controller implements ShipsPlacedEventListener, ShipSunkEventListen
 
     @Override
     public void onShoot() {
-        oponentShootController.shoot();
+        opponentShootController.shoot();
     }
 
     private void displayPlayerShips()
