@@ -8,15 +8,11 @@ import model.board.Board;
 import model.ship.Ship;
 import utils.ButtonStyleInterface;
 
-public class PlayerShootService {
-    private ShipSunkEventListener shipSunkEventListener;
+public class PlayerShootService extends ShootService {
     private ShootEventListener shootEventListener;
-    private GridPane gridPane;
-    private Board board;
 
     public PlayerShootService(GridPane gridPane, Board board) {
-        this.gridPane = gridPane;
-        this.board = board;
+        super(gridPane, board);
     }
 
     public void initShotButtons()
@@ -34,7 +30,9 @@ public class PlayerShootService {
                             btn.setStyle(ButtonStyleInterface.STYLE_DAMAGED);
 
                             if (ship.isSunk()) {
-                                if (shipSunkEventListener != null) shipSunkEventListener.onShipSunk(ship, gridPane);
+                                markShipAsSunk(ship);
+
+                                if (shipSunkEventListener != null) shipSunkEventListener.onShipSunk(ship, gridPane, board);
                             }
                         } else {
                             btn.setStyle(ButtonStyleInterface.STYLE_MISSED);
@@ -49,10 +47,6 @@ public class PlayerShootService {
                 gridPane.add(btn, j, i);
             }
         }
-    }
-
-    public void setShipSunkEventListener(ShipSunkEventListener listener) {
-        this.shipSunkEventListener = listener;
     }
 
     public void setShootEventListener(ShootEventListener shootEventListener) {

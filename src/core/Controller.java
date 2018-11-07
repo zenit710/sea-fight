@@ -1,7 +1,5 @@
 package core;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,13 +11,8 @@ import service.*;
 import utils.ButtonStyleInterface;
 
 import java.util.ArrayList;
-import java.util.Random;
 
-public class Controller implements
-        ShipsPlacedEventListener,
-        ShipSunkEventListener,
-        ShootEventListener
-{
+public class Controller implements ShipsPlacedEventListener, ShipSunkEventListener, ShootEventListener {
     private final int boardSize = 10;
 
     @FXML
@@ -35,14 +28,14 @@ public class Controller implements
     private Board oponentsBoard;
     private Board playersBoard;
     private MessageService messageService;
-    private Random random = new Random();
+    private OponentShootService oponentShootService;
 
     @FXML
     public void initialize() {
         messageService = new MessageService(statusLabel);
 
-        oponentsBoard = new Board(boardSize);
-        playersBoard = new Board(boardSize);
+        oponentsBoard = new Board(boardSize, "oponentsBoard");
+        playersBoard = new Board(boardSize, "playersBoard");
 
         shipListFactory = new ShipListFactory(4, 3, 2, 1);
 
@@ -70,6 +63,30 @@ public class Controller implements
         playerShootService.setShipSunkEventListener(this);
         playerShootService.setShootEventListener(this);
         playerShootService.initShotButtons();
+
+        oponentShootService = new OponentShootService(playerPane, playersBoard);
+        oponentShootService.setShipSunkEventListener(this);
+    }
+
+    @Override
+    public void onShipPlaced() {
+        play();
+    }
+
+    @Override
+    public void onShipSunk(Ship ship, GridPane gridPane, Board board) {
+        if (board.allShipsSunk()) {
+            if (board.getName().equals(oponentsBoard.getName())) {
+                messageService.showMessage("WINNER!");
+            } else {
+                messageService.showMessage("You lost...");
+            }
+        }
+    }
+
+    @Override
+    public void onShoot() {
+        oponentShootService.shoot();
     }
 
     private void displayPlayerShips()
@@ -88,71 +105,6 @@ public class Controller implements
                 }
 
                 playerPane.add(btn, j, i);
-            }
-        }
-    }
-
-    private void oponentShoot()
-    {
-        int row;
-        int column;
-
-        do {
-            row = random.nextInt(boardSize - 1);
-            column = random.nextInt(boardSize - 1);
-        } while (playersBoard.isFieldShooted(row, column));
-
-        Button button = (Button) GridPaneNodeFinder.getNodeByRowColumnIndex(row, column, playerPane);
-
-        Ship ship = playersBoard.shoot(row, column);
-
-        if (ship == null) {
-            button.setStyle(ButtonStyleInterface.STYLE_MISSED);
-        } else if (ship.isSunk()) {
-            markShipAsSunk(ship, playerPane);
-        } else {
-            button.setStyle(ButtonStyleInterface.STYLE_DAMAGED);
-        }
-
-        if (playersBoard.allShipsSunk()) {
-            messageService.showMessage("Przegrałeś!");
-        }
-    }
-
-    @Override
-    public void onShipPlaced() {
-        play();
-    }
-
-    @Override
-    public void onShipSunk(Ship ship, GridPane gridPane) {
-        markShipAsSunk(ship, gridPane);
-
-        if (oponentsBoard.allShipsSunk()) {
-            messageService.showMessage("Wygrałeś!");
-        }
-    }
-
-    @Override
-    public void onShoot() {
-        oponentShoot();
-    }
-
-    private void markShipAsSunk(Ship ship, GridPane pane)
-    {
-        if (ship.isVertical()) {
-            int endRow = ship.getStartRow() + ship.getSize();
-
-            for (int i = ship.getStartRow(); i < endRow; i++) {
-                Button button = (Button) GridPaneNodeFinder.getNodeByRowColumnIndex(i, ship.getStartColumn(), pane);
-                button.setStyle(ButtonStyleInterface.STYLE_DESTROYED);
-            }
-        } else {
-            int endColumn = ship.getStartColumn() + ship.getSize();
-
-            for (int i = ship.getStartColumn(); i < endColumn; i++) {
-                Button button = (Button) GridPaneNodeFinder.getNodeByRowColumnIndex(ship.getStartRow(), i, pane);
-                button.setStyle(ButtonStyleInterface.STYLE_DESTROYED);
             }
         }
     }

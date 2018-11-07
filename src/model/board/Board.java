@@ -4,13 +4,15 @@ import model.ship.Ship;
 
 public class Board {
     private int size;
+    private String name;
     private Ship[][] ships;
     private boolean[][] availableFields;
     private boolean[][] shots;
 
-    public Board(int size)
+    public Board(int size, String name)
     {
         this.size = size;
+        this.name = name;
         clearBoard();
     }
 
@@ -52,6 +54,10 @@ public class Board {
 
     public boolean[][] getAvailableFields() {
         return availableFields;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public Ship[][] getShips() {
