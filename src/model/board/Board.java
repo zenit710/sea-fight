@@ -1,5 +1,7 @@
 package model.board;
 
+import model.Coord;
+import model.Range;
 import model.ship.Ship;
 
 public class Board {
@@ -8,6 +10,7 @@ public class Board {
     private Ship[][] ships;
     private boolean[][] availableFields;
     private boolean[][] shots;
+    private boolean[][] sensibleShots;
 
     public Board(int size, String name)
     {
@@ -30,7 +33,7 @@ public class Board {
         ship.setStartRow(row);
 
         placeShip(ship, row, column);
-        permitFields(ship, row, column);
+        permitFields(ship);
     }
 
     public boolean allShipsSunk() {
@@ -45,11 +48,6 @@ public class Board {
         }
 
         return true;
-    }
-
-    public boolean isFieldShooted(int row, int column)
-    {
-        return shots[row][column];
     }
 
     public boolean[][] getAvailableFields() {
@@ -72,6 +70,15 @@ public class Board {
         return size;
     }
 
+    public boolean isFieldShooted(int row, int column)
+    {
+        return shots[row][column];
+    }
+
+    public boolean isShootSensible(int row, int column) {
+        return sensibleShots[row][column];
+    }
+
     public Ship shoot(int row, int column)
     {
         shots[row][column] = true;
@@ -79,6 +86,8 @@ public class Board {
         if (ships[row][column] != null) {
             Ship ship = ships[row][column];
             ship.hit();
+
+            if (ship.isSunk()) markSenselessFields(ship);
 
             return ship;
         }
@@ -91,36 +100,25 @@ public class Board {
         ships = new Ship[size][size];
         availableFields = new boolean[size][size];
         shots = new boolean[size][size];
+        sensibleShots = new boolean[size][size];
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 ships[i][j] = null;
                 availableFields[i][j] = true;
                 shots[i][j] = false;
+                sensibleShots[i][j] = true;
             }
         }
     }
 
-    private void permitFields(Ship ship, int row, int column)
-    {
-        int startColumn = column == 0 ? 0 : column - 1;
-        int startRow = row == 0 ? 0 : row - 1;
-        int endRow;
-        int endColumn;
-        int shipSize = ship.getSize();
+    private void permitFields(Ship ship) {
+        Range range = getRange(ship);
+        Coord from = range.getFrom();
+        Coord to = range.getTo();
 
-        if (ship.isVertical()) {
-            endColumn = column == size - 1 ? column : column + 1;
-            endRow = startRow + shipSize;
-            endRow = endRow == size - 1 ? endRow : endRow + 1;
-        } else {
-            endRow = row == size - 1 ? row : row + 1;
-            endColumn = startColumn + shipSize;
-            endColumn = endColumn == size - 1 ? endColumn : endColumn + 1;
-        }
-
-        for (int i = startRow; i <= endRow; i++) {
-            for (int j = startColumn; j <= endColumn; j++) {
+        for (int i = from.getRow(); i <= to.getRow(); i++) {
+            for (int j = from.getColumn(); j <= to.getColumn(); j++) {
                 availableFields[i][j] = false;
             }
         }
@@ -172,5 +170,48 @@ public class Board {
                 ships[row][i] = ship;
             }
         }
+    }
+
+    private void markSenselessFields(Ship ship) {
+        Range range = getRange(ship);
+        Coord from = range.getFrom();
+        Coord to = range.getTo();
+
+        for (int i = from.getRow(); i <= to.getRow(); i++) {
+            for (int j = from.getColumn(); j <= to.getColumn(); j++) {
+                sensibleShots[i][j] = false;
+            }
+        }
+
+        System.out.println("");
+        for (int i = 0; i < size; i++) {
+            System.out.println("");
+            for (int j = 0; j < size; j++) {
+                System.out.print(" " + (sensibleShots[i][j] ? "O" : "X"));
+            }
+        }
+    }
+
+    private Range getRange(Ship ship) {
+        int column = ship.getStartColumn();
+        int row = ship.getStartRow();
+        int startColumn = column == 0 ? 0 : column - 1;
+        int startRow = row == 0 ? 0 : row - 1;
+        int endRow;
+        int endColumn;
+        int shipSize = ship.getSize();
+
+        if (ship.isVertical()) {
+            endColumn = column == size - 1 ? column : column + 1;
+            endRow = row + shipSize;
+        } else {
+            endRow = row == size - 1 ? row : row + 1;
+            endColumn = column + shipSize;
+        }
+
+        return new Range(
+            new Coord(startRow, startColumn),
+            new Coord(endRow, endColumn)
+        );
     }
 }

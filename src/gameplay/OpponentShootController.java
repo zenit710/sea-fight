@@ -71,7 +71,9 @@ public class OpponentShootController extends ShootController {
         int column = lastShipCoord.getColumn();
 
         while (row < board.getSize()) {
-            if (board.isFieldShooted(row, column)) {
+            if (!board.isShootSensible(row, column)) {
+                return null;
+            } else if (board.isFieldShooted(row, column)) {
                 Ship ship = board.getShipAt(row, column);
 
                 if (ship == null) {
@@ -92,7 +94,9 @@ public class OpponentShootController extends ShootController {
         int column = lastShipCoord.getColumn() - 1;
 
         while (column >= 0) {
-            if (board.isFieldShooted(row, column)) {
+            if (!board.isShootSensible(row, column)) {
+                return null;
+            } else if (board.isFieldShooted(row, column)) {
                 Ship ship = board.getShipAt(row, column);
 
                 if (ship == null) {
@@ -115,7 +119,7 @@ public class OpponentShootController extends ShootController {
         do {
             row = random.nextInt(board.getSize());
             column = random.nextInt(board.getSize());
-        } while (board.isFieldShooted(row, column));
+        } while (!board.isShootSensible(row, column) || board.isFieldShooted(row, column));
 
         return new Coord(row, column);
     }
@@ -125,7 +129,9 @@ public class OpponentShootController extends ShootController {
         int column = lastShipCoord.getColumn() + 1;
 
         while (column < board.getSize()) {
-            if (board.isFieldShooted(row, column)) {
+            if (!board.isShootSensible(row, column)) {
+                return null;
+            } else if (board.isFieldShooted(row, column)) {
                 Ship ship = board.getShipAt(row, column);
 
                 if (ship == null) {
@@ -146,7 +152,9 @@ public class OpponentShootController extends ShootController {
         int column = lastShipCoord.getColumn();
 
         while (row >= 0) {
-            if (board.isFieldShooted(row, column)) {
+            if (!board.isShootSensible(row, column)) {
+                return null;
+            } else if (board.isFieldShooted(row, column)) {
                 Ship ship = board.getShipAt(row, column);
 
                 if (ship == null) {
