@@ -204,9 +204,11 @@ public class Board {
         if (ship.isVertical()) {
             endColumn = column == size - 1 ? column : column + 1;
             endRow = row + shipSize;
+            endRow = endRow == size ? endRow - 1 : endRow;
         } else {
             endRow = row == size - 1 ? row : row + 1;
             endColumn = column + shipSize;
+            endColumn = endColumn == size ? endColumn - 1 : endColumn;
         }
 
         return new Range(

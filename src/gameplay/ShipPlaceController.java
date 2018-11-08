@@ -50,6 +50,7 @@ public class ShipPlaceController {
         for (int i = 0; i < board.getSize(); i++) {
             for (int j = 0; j < board.getSize(); j++) {
                 Button btn = new Button();
+                btn.setPrefSize(35, 35);
 
                 if (ships[i][j] != null) {
                     btn.setStyle(STYLE_FOCUSED);
