@@ -7,12 +7,16 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+    private final double minWidth = 1100;
+    private final double minHeight = 400;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Sea Battle");
-        primaryStage.setScene(new Scene(root, 1000, 400));
+        primaryStage.setScene(new Scene(root, minWidth, minHeight));
+        primaryStage.setMinWidth(minWidth);
+        primaryStage.setMinHeight(minHeight);
         primaryStage.show();
     }
 

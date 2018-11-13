@@ -6,8 +6,9 @@ import gameplay.event.ShipsPlacedEventListener;
 import gameplay.event.ShootEventListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import model.board.Board;
 import model.ship.Ship;
 import model.ship.ShipListFactory;
@@ -26,7 +27,10 @@ public class Controller implements ShipsPlacedEventListener, ShipSunkEventListen
     private GridPane playerPane;
 
     @FXML
-    private Label statusLabel;
+    private ScrollPane messageScrollPane;
+
+    @FXML
+    private VBox messageContainer;
 
     private ShipListFactory shipListFactory;
     private Board oponentsBoard;
@@ -36,11 +40,11 @@ public class Controller implements ShipsPlacedEventListener, ShipSunkEventListen
 
     @FXML
     public void initialize() {
-        messageService = new MessageService(statusLabel);
+        messageScrollPane.setVvalue(1.0);
 
+        messageService = new MessageService(messageContainer);
         oponentsBoard = new Board(boardSize, "oponentsBoard");
         playersBoard = new Board(boardSize, "playersBoard");
-
         shipListFactory = new ShipListFactory(4, 3, 2, 1);
 
         ShipPlacer shipPlacer = new ShipPlacer(oponentsBoard);
@@ -63,12 +67,12 @@ public class Controller implements ShipsPlacedEventListener, ShipSunkEventListen
         messageService.clear();
         displayPlayerShips();
 
-        PlayerShootController playerShootController = new PlayerShootController(oponentPane, oponentsBoard);
+        PlayerShootController playerShootController = new PlayerShootController(oponentPane, oponentsBoard, messageService);
         playerShootController.setShipSunkEventListener(this);
         playerShootController.setShootEventListener(this);
         playerShootController.initShotButtons();
 
-        opponentShootController = new OpponentShootController(playerPane, playersBoard);
+        opponentShootController = new OpponentShootController(playerPane, playersBoard, messageService);
         opponentShootController.setShipSunkEventListener(this);
     }
 
@@ -81,9 +85,9 @@ public class Controller implements ShipsPlacedEventListener, ShipSunkEventListen
     public void onShipSunk(Ship ship, GridPane gridPane, Board board) {
         if (board.allShipsSunk()) {
             if (board.getName().equals(oponentsBoard.getName())) {
-                messageService.showMessage("WINNER!");
+                messageService.addMessage("YOU WON!");
             } else {
-                messageService.showMessage("You lost...");
+                messageService.addMessage("You lost...");
             }
 
             blockPlayerMoves();

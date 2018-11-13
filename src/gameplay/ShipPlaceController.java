@@ -165,6 +165,7 @@ public class ShipPlaceController {
         statusMessage += "Orientation: ";
         statusMessage += ship.isVertical() ? "Vertical" : "Horizontal";
 
-        messageService.showMessage(statusMessage);
+        messageService.clear();
+        messageService.addMessage(statusMessage);
     }
 }

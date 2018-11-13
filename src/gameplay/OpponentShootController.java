@@ -6,6 +6,7 @@ import model.Coord;
 import model.board.Board;
 import model.ship.Ship;
 import service.GridPaneNodeFinder;
+import service.MessageService;
 import utils.ButtonStyleInterface;
 
 import java.util.Random;
@@ -14,8 +15,8 @@ public class OpponentShootController extends ShootController {
     private Random random = new Random();
     private Coord lastShipCoord;
 
-    public OpponentShootController(GridPane gridPane, Board board) {
-        super(gridPane, board);
+    public OpponentShootController(GridPane gridPane, Board board, MessageService messageService) {
+        super(gridPane, board, messageService);
     }
 
     public void shoot()

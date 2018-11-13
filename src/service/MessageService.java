@@ -1,19 +1,22 @@
 package service;
 
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 
 public class MessageService {
-    private Label messageLabel;
+    private VBox messageContainer;
 
-    public MessageService(Label messageLabel) {
-        this.messageLabel = messageLabel;
+    public MessageService(VBox messageContainer) {
+        this.messageContainer = messageContainer;
     }
 
-    public void showMessage(String message) {
-        messageLabel.setText(message);
+    public void addMessage(String message) {
+        Label label = new Label(message);
+
+        messageContainer.getChildren().add(label);
     }
 
     public void clear() {
-        messageLabel.setText("");
+        messageContainer.getChildren().clear();
     }
 }

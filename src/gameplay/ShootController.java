@@ -6,16 +6,19 @@ import javafx.scene.layout.GridPane;
 import model.board.Board;
 import model.ship.Ship;
 import service.GridPaneNodeFinder;
+import service.MessageService;
 import utils.ButtonStyleInterface;
 
 public abstract class ShootController {
     protected ShipSunkEventListener shipSunkEventListener;
     protected GridPane gridPane;
+    protected MessageService messageService;
     protected Board board;
 
-    public ShootController(GridPane gridPane, Board board) {
+    public ShootController(GridPane gridPane, Board board, MessageService messageService) {
         this.gridPane = gridPane;
         this.board = board;
+        this.messageService = messageService;
     }
 
     protected void markShipAsSunk(Ship ship)

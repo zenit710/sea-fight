@@ -7,13 +7,14 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import model.board.Board;
 import model.ship.Ship;
+import service.MessageService;
 import utils.ButtonStyleInterface;
 
 public class PlayerShootController extends ShootController {
     private ShootEventListener shootEventListener;
 
-    public PlayerShootController(GridPane gridPane, Board board) {
-        super(gridPane, board);
+    public PlayerShootController(GridPane gridPane, Board board, MessageService messageService) {
+        super(gridPane, board, messageService);
     }
 
     public void initShotButtons()
@@ -25,13 +26,19 @@ public class PlayerShootController extends ShootController {
                 btn.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        Ship ship = board.shoot(GridPane.getRowIndex(btn), GridPane.getColumnIndex(btn));
+                        int row = GridPane.getRowIndex(btn);
+                        int column = GridPane.getColumnIndex(btn);
+
+                        Ship ship = board.shoot(row, column);
+                        String shootMessage = "Player shooted at: " + column + "x" + row;
 
                         if (ship != null) {
                             btn.setStyle(ButtonStyleInterface.STYLE_DAMAGED);
+                            shootMessage += " - hit";
 
                             if (ship.isSunk()) {
                                 markShipAsSunk(ship);
+                                shootMessage += " - sunk";
 
                                 if (shipSunkEventListener != null) shipSunkEventListener.onShipSunk(ship, gridPane, board);
                             }
@@ -40,6 +47,7 @@ public class PlayerShootController extends ShootController {
                         }
 
                         btn.setDisable(true);
+                        messageService.addMessage(shootMessage);
 
                         if (shootEventListener != null) shootEventListener.onShoot();
                     }
