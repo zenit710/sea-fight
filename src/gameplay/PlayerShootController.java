@@ -15,6 +15,8 @@ public class PlayerShootController extends ShootController {
 
     public PlayerShootController(GridPane gridPane, Board board, MessageService messageService) {
         super(gridPane, board, messageService);
+
+        setName("Player");
     }
 
     public void initShotButtons()
@@ -29,25 +31,22 @@ public class PlayerShootController extends ShootController {
                         int row = GridPane.getRowIndex(btn);
                         int column = GridPane.getColumnIndex(btn);
 
+                        btn.setDisable(true);
+
                         Ship ship = board.shoot(row, column);
-                        String shootMessage = "Player shooted at: " + column + "x" + row;
+                        addShootMessage(ship, row, column);
 
                         if (ship != null) {
                             btn.setStyle(ButtonStyleInterface.STYLE_DAMAGED);
-                            shootMessage += " - hit";
-
-                            if (ship.isSunk()) {
-                                markShipAsSunk(ship);
-                                shootMessage += " - sunk";
-
-                                if (shipSunkEventListener != null) shipSunkEventListener.onShipSunk(ship, gridPane, board);
-                            }
                         } else {
                             btn.setStyle(ButtonStyleInterface.STYLE_MISSED);
                         }
 
-                        btn.setDisable(true);
-                        messageService.addMessage(shootMessage);
+                        if (ship != null && ship.isSunk()) {
+                            markShipAsSunk(ship);
+
+                            if (shipSunkEventListener != null) shipSunkEventListener.onShipSunk(ship, gridPane, board);
+                        }
 
                         if (shootEventListener != null) shootEventListener.onShoot();
                     }

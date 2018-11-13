@@ -17,6 +17,8 @@ public class OpponentShootController extends ShootController {
 
     public OpponentShootController(GridPane gridPane, Board board, MessageService messageService) {
         super(gridPane, board, messageService);
+
+        setName("Com");
     }
 
     public void shoot()
@@ -26,6 +28,7 @@ public class OpponentShootController extends ShootController {
         Button button = (Button) GridPaneNodeFinder.getNodeByRowColumnIndex(coord.getRow(), coord.getColumn(), gridPane);
 
         Ship ship = board.shoot(coord.getRow(), coord.getColumn());
+        addShootMessage(ship, coord.getRow(), coord.getColumn());
 
         if (ship == null) {
             button.setStyle(ButtonStyleInterface.STYLE_MISSED);

@@ -14,6 +14,7 @@ public abstract class ShootController {
     protected GridPane gridPane;
     protected MessageService messageService;
     protected Board board;
+    protected String name;
 
     public ShootController(GridPane gridPane, Board board, MessageService messageService) {
         this.gridPane = gridPane;
@@ -21,8 +22,15 @@ public abstract class ShootController {
         this.messageService = messageService;
     }
 
-    protected void markShipAsSunk(Ship ship)
-    {
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setShipSunkEventListener(ShipSunkEventListener shipSunkEventListener) {
+        this.shipSunkEventListener = shipSunkEventListener;
+    }
+
+    protected void markShipAsSunk(Ship ship) {
         if (ship.isVertical()) {
             int endRow = ship.getStartRow() + ship.getSize();
 
@@ -40,7 +48,19 @@ public abstract class ShootController {
         }
     }
 
-    public void setShipSunkEventListener(ShipSunkEventListener shipSunkEventListener) {
-        this.shipSunkEventListener = shipSunkEventListener;
+    protected void addShootMessage(Ship ship, int row, int column) {
+        String message = name + " shooted at " + column + "x" + row;
+
+        if (ship == null) {
+            message += " - missed";
+        } else {
+            message += " - hit";
+        }
+
+        messageService.addMessage(message);
+
+        if (ship != null && ship.isSunk()) {
+            messageService.addMessage("Ship of size " + ship.getSize() + " is sunk!");
+        }
     }
 }

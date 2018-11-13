@@ -42,7 +42,7 @@ public class Controller implements ShipsPlacedEventListener, ShipSunkEventListen
     public void initialize() {
         messageScrollPane.setVvalue(1.0);
 
-        messageService = new MessageService(messageContainer);
+        messageService = new MessageService(messageScrollPane, messageContainer);
         oponentsBoard = new Board(boardSize, "oponentsBoard");
         playersBoard = new Board(boardSize, "playersBoard");
         shipListFactory = new ShipListFactory(4, 3, 2, 1);
@@ -85,9 +85,9 @@ public class Controller implements ShipsPlacedEventListener, ShipSunkEventListen
     public void onShipSunk(Ship ship, GridPane gridPane, Board board) {
         if (board.allShipsSunk()) {
             if (board.getName().equals(oponentsBoard.getName())) {
-                messageService.addMessage("YOU WON!");
+                messageService.addMessage("YOU WON!", "#00FF00");
             } else {
-                messageService.addMessage("You lost...");
+                messageService.addMessage("You lost...", "#FF0000");
             }
 
             blockPlayerMoves();
@@ -96,7 +96,9 @@ public class Controller implements ShipsPlacedEventListener, ShipSunkEventListen
 
     @Override
     public void onShoot() {
-        opponentShootController.shoot();
+        if (!oponentsBoard.allShipsSunk()) {
+            opponentShootController.shoot();
+        }
     }
 
     private void displayPlayerShips()
