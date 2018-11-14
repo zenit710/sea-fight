@@ -144,7 +144,7 @@
     <property name="artifact.output.javafxapp" value="${basedir}/out/artifacts/JavaFXApp"/>
     <mkdir dir="${artifacts.temp.dir}"/>
     <property name="artifact.temp.output.JavaFXApp" value="${artifacts.temp.dir}/JavaFXApp.jar"/>
-    <taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant" classpath="${jdk.home.1.8}/lib/ant-javafx.jar"/>
+    <taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant" classpath="${JAVA_HOME}/lib/ant-javafx.jar"/>
   </target>
   
   <target name="clean.artifact.javafxapp" description="clean JavaFXApp artifact output">
@@ -152,6 +152,9 @@
   </target>
   
   <target name="artifact.javafxapp" depends="init.artifacts, compile.module.sea-fight" description="Build &#39;JavaFXApp&#39; artifact" xmlns:fx="javafx:com.sun.javafx.tools.ant">
+    <taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
+             uri="javafx:com.sun.javafx.tools.ant"
+             classpath="${JAVA_HOME}/lib/ant-javafx.jar"/>
     <mkdir dir="${artifact.output.javafxapp}"/>
     <copy todir="${artifact.temp.output.JavaFXApp}">
       <fileset dir="${sea-fight.output.dir}"/>
