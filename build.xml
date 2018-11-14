@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="sea-fight" default="all">
+  
+  
+  <property file="build.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*.yarb/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.war"/>
+    <include name="*.swc"/>
+    <include name="*.zip"/>
+    <include name="*.egg"/>
+    <include name="*.ane"/>
+    <include name="*.jar"/>
+    <include name="*.ear"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+  </patternset>
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module sea-fight -->
+  
+  <dirname property="module.sea-fight.basedir" file="${ant.file}"/>
+  
+  
+  
+  <property name="compiler.args.sea-fight" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="sea-fight.output.dir" value="${module.sea-fight.basedir}/out/production/sea-fight"/>
+  <property name="sea-fight.testoutput.dir" value="${module.sea-fight.basedir}/out/test/sea-fight"/>
+  
+  <path id="sea-fight.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="sea-fight.module.production.classpath"/>
+  
+  <path id="sea-fight.runtime.production.module.classpath">
+    <pathelement location="${sea-fight.output.dir}"/>
+  </path>
+  
+  <path id="sea-fight.module.classpath">
+    <pathelement location="${sea-fight.output.dir}"/>
+    <pathelement location="${path.variable.maven_repository}/junit/junit/4.12/junit-4.12.jar"/>
+    <pathelement location="${path.variable.maven_repository}/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar"/>
+  </path>
+  
+  <path id="sea-fight.runtime.module.classpath">
+    <pathelement location="${sea-fight.testoutput.dir}"/>
+    <pathelement location="${sea-fight.output.dir}"/>
+    <pathelement location="${path.variable.maven_repository}/junit/junit/4.12/junit-4.12.jar"/>
+    <pathelement location="${path.variable.maven_repository}/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.sea-fight">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.sea-fight">
+    <patternset refid="excluded.from.module.sea-fight"/>
+  </patternset>
+  
+  <path id="sea-fight.module.sourcepath">
+    <dirset dir="${module.sea-fight.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  <path id="sea-fight.module.test.sourcepath">
+    <dirset dir="${module.sea-fight.basedir}">
+      <include name="test"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.sea-fight" depends="compile.module.sea-fight.production,compile.module.sea-fight.tests" description="Compile module sea-fight"/>
+  
+  <target name="compile.module.sea-fight.production" description="Compile module sea-fight; production classes">
+    <mkdir dir="${sea-fight.output.dir}"/>
+    <javac destdir="${sea-fight.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+      <compilerarg line="${compiler.args.sea-fight}"/>
+      <bootclasspath refid="sea-fight.module.bootclasspath"/>
+      <classpath refid="sea-fight.module.production.classpath"/>
+      <src refid="sea-fight.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.sea-fight"/>
+    </javac>
+    
+    <copy todir="${sea-fight.output.dir}">
+      <fileset dir="${module.sea-fight.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.sea-fight.tests" depends="compile.module.sea-fight.production" description="compile module sea-fight; test classes" unless="skip.tests">
+    <mkdir dir="${sea-fight.testoutput.dir}"/>
+    <javac destdir="${sea-fight.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+      <compilerarg line="${compiler.args.sea-fight}"/>
+      <bootclasspath refid="sea-fight.module.bootclasspath"/>
+      <classpath refid="sea-fight.module.classpath"/>
+      <src refid="sea-fight.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.sea-fight"/>
+    </javac>
+    
+    <copy todir="${sea-fight.testoutput.dir}">
+      <fileset dir="${module.sea-fight.basedir}/test">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.sea-fight" description="cleanup module">
+    <delete dir="${sea-fight.output.dir}"/>
+    <delete dir="${sea-fight.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.sea-fight, clean.artifact.javafxapp" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.sea-fight" description="build all modules"/>
+  
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.javafxapp" value="${basedir}/out/artifacts/JavaFXApp"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+    <property name="artifact.temp.output.JavaFXApp" value="${artifacts.temp.dir}/JavaFXApp.jar"/>
+    <taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant" classpath="${jdk.home.1.8}/lib/ant-javafx.jar"/>
+  </target>
+  
+  <target name="clean.artifact.javafxapp" description="clean JavaFXApp artifact output">
+    <delete dir="${artifact.output.javafxapp}"/>
+  </target>
+  
+  <target name="artifact.javafxapp" depends="init.artifacts, compile.module.sea-fight" description="Build &#39;JavaFXApp&#39; artifact" xmlns:fx="javafx:com.sun.javafx.tools.ant">
+    <mkdir dir="${artifact.output.javafxapp}"/>
+    <copy todir="${artifact.temp.output.JavaFXApp}">
+      <fileset dir="${sea-fight.output.dir}"/>
+    </copy>
+    <fx:fileset id="all_but_JavaFXApp" dir="${artifact.temp.output.JavaFXApp}" includes="**/*.jar">
+      <exclude name="JavaFXApp.jar"/>
+    </fx:fileset>
+    <fx:fileset id="all_JavaFXApp" dir="${artifact.temp.output.JavaFXApp}" includes="**/*.jar"/>
+    <fx:application id="JavaFXApp_id" name="JavaFXApp" mainClass="sample.Main"/>
+    <fx:jar destfile="${artifact.temp.output.JavaFXApp}/JavaFXApp.jar">
+      <fx:application refid="JavaFXApp_id"/>
+      <fileset dir="${artifact.temp.output.JavaFXApp}" excludes="**/*.jar"/>
+      <fx:resources>
+        <fx:fileset refid="all_but_JavaFXApp"/>
+      </fx:resources>
+    </fx:jar>
+    <fx:deploy width="600" height="400" updatemode="background" outdir="${artifact.temp.output.JavaFXApp}/deploy" outfile="JavaFXApp">
+      <fx:application refid="JavaFXApp_id"/>
+      <fx:resources>
+        <fx:fileset refid="all_JavaFXApp"/>
+      </fx:resources>
+    </fx:deploy>
+    <copy todir="${artifact.output.javafxapp}">
+      <fileset dir="${artifact.temp.output.JavaFXApp}/deploy"/>
+    </copy>
+    <delete includeemptydirs="true">
+      <fileset dir="${artifact.temp.output.JavaFXApp}"/>
+    </delete>
+  </target>
+  
+  <target name="build.all.artifacts" depends="artifact.javafxapp" description="Build all artifacts">
+    
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+  
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
+</project>
