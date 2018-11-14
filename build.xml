@@ -103,12 +103,6 @@
     </dirset>
   </path>
   
-  <path id="sea-fight.module.test.sourcepath">
-    <dirset dir="${module.sea-fight.basedir}">
-      <include name="test"/>
-    </dirset>
-  </path>
-  
   
   <target name="compile.module.sea-fight" depends="compile.module.sea-fight.production,compile.module.sea-fight.tests" description="Compile module sea-fight"/>
   
@@ -130,23 +124,7 @@
     </copy>
   </target>
   
-  <target name="compile.module.sea-fight.tests" depends="compile.module.sea-fight.production" description="compile module sea-fight; test classes" unless="skip.tests">
-    <mkdir dir="${sea-fight.testoutput.dir}"/>
-    <javac destdir="${sea-fight.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
-      <compilerarg line="${compiler.args.sea-fight}"/>
-      <bootclasspath refid="sea-fight.module.bootclasspath"/>
-      <classpath refid="sea-fight.module.classpath"/>
-      <src refid="sea-fight.module.test.sourcepath"/>
-      <patternset refid="excluded.from.compilation.sea-fight"/>
-    </javac>
-    
-    <copy todir="${sea-fight.testoutput.dir}">
-      <fileset dir="${module.sea-fight.basedir}/test">
-        <patternset refid="compiler.resources"/>
-        <type type="file"/>
-      </fileset>
-    </copy>
-  </target>
+  <target name="compile.module.sea-fight.tests" depends="compile.module.sea-fight.production" description="compile module sea-fight; test classes" unless="skip.tests"/>
   
   <target name="clean.module.sea-fight" description="cleanup module">
     <delete dir="${sea-fight.output.dir}"/>
