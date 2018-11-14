@@ -155,6 +155,8 @@
     <taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
              uri="javafx:com.sun.javafx.tools.ant"
              classpath="${JAVA_HOME}/lib/ant-javafx.jar"/>
+    <echo message="Java Home: ${JAVA_HOME}" />
+
     <mkdir dir="${artifact.output.javafxapp}"/>
     <copy todir="${artifact.temp.output.JavaFXApp}">
       <fileset dir="${sea-fight.output.dir}"/>
